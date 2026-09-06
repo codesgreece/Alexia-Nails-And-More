@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 140" role="img" aria-label="Alexia Nails & More">
+  <defs>
+    <linearGradient id="pinkLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D91B73" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#D91B73" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#D91B73" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <text x="210" y="68" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-style="italic" fill="#303030">Alexia</text>
+  <line x1="90" y1="88" x2="330" y2="88" stroke="url(#pinkLine)" stroke-width="1.5"/>
+  <text x="210" y="112" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" letter-spacing="6" fill="#D91B73">NAILS &amp; MORE</text>
+</svg>
