@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { getAvailableSlots } from "@/lib/availability";
+import {
+  findAlternativeStaff,
+  getDaySchedule,
+} from "@/lib/availability";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -18,6 +21,20 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Μη έγκυρη ημερομηνία." }, { status: 400 });
   }
 
-  const slots = await getAvailableSlots({ serviceId, staffId, date });
-  return NextResponse.json({ slots });
+  const schedule = await getDaySchedule({ serviceId, staffId, date });
+  const alternatives =
+    schedule.available.length === 0
+      ? await findAlternativeStaff({
+          serviceId,
+          date,
+          excludeStaffId: staffId,
+        })
+      : [];
+
+  return NextResponse.json({
+    slots: schedule.available,
+    busy: schedule.busy,
+    durationMin: schedule.durationMin,
+    alternatives,
+  });
 }

@@ -31,6 +31,7 @@ export function minutesToTime(minutes: number): string {
 export function formatDateGR(date: Date | string) {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleDateString("el-GR", {
+    timeZone: "Europe/Athens",
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -41,6 +42,7 @@ export function formatDateGR(date: Date | string) {
 export function formatTimeGR(date: Date | string) {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleTimeString("el-GR", {
+    timeZone: "Europe/Athens",
     hour: "2-digit",
     minute: "2-digit",
   });

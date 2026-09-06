@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { assertSlotAvailable } from "@/lib/availability";
+import { parseBookingStart } from "@/lib/time";
 import { generateConfirmationCode } from "@/lib/utils";
 import { notifyBookingCreated, scheduleReminders } from "@/lib/notifications";
 
 const schema = z.object({
   serviceId: z.string().min(1),
   staffId: z.string().min(1),
-  startAt: z.string().datetime(),
+  startAt: z.string().min(10),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   phone: z.string().min(6),
@@ -30,7 +31,10 @@ export async function POST(request: Request) {
   }
 
   const data = parsed.data;
-  const startAt = new Date(data.startAt);
+  const startAt = parseBookingStart(data.startAt);
+  if (Number.isNaN(startAt.getTime())) {
+    return NextResponse.json({ error: "Μη έγκυρη ώρα ραντεβού." }, { status: 400 });
+  }
 
   const availability = await assertSlotAvailable({
     serviceId: data.serviceId,

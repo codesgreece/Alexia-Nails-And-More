@@ -272,7 +272,7 @@ export default function CalendarPage() {
                   className="btn-primary !px-3 !py-1.5 text-sm"
                   onClick={() =>
                     patchAppointment(selected.id, {
-                      startAt: new Date(`${reschedule.date}T${reschedule.time}:00`).toISOString(),
+                      startAt: `${reschedule.date}T${reschedule.time}:00`,
                     })
                   }
                 >

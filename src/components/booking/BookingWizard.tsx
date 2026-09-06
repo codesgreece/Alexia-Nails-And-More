@@ -24,6 +24,14 @@ type Staff = {
 };
 
 type Slot = { start: string; end: string; label: string };
+type BusySlot = { start: string; end: string; label: string; endLabel: string };
+type Alternative = {
+  staffId: string;
+  staffName: string;
+  color: string;
+  slotsCount: number;
+  nextLabel: string | null;
+};
 
 const STEPS = [
   "Υπηρεσία",
@@ -42,7 +50,10 @@ function nextOpenDates(count = 45) {
   while (dates.length < count) {
     d.setDate(d.getDate() + 1);
     if (d.getDay() !== 0) {
-      dates.push(d.toISOString().slice(0, 10));
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      dates.push(`${y}-${m}-${day}`);
     }
   }
   return dates;
@@ -57,6 +68,8 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
   const [services, setServices] = useState<Service[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
+  const [busy, setBusy] = useState<BusySlot[]>([]);
+  const [alternatives, setAlternatives] = useState<Alternative[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -111,11 +124,17 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
     if (!serviceId || !staffId || !date) return;
     setLoading(true);
     setSlot(null);
+    setBusy([]);
+    setAlternatives([]);
     fetch(
       `/api/booking/availability?serviceId=${serviceId}&staffId=${staffId}&date=${date}`
     )
       .then((r) => r.json())
-      .then((data) => setSlots(data.slots || []))
+      .then((data) => {
+        setSlots(data.slots || []);
+        setBusy(data.busy || []);
+        setAlternatives(data.alternatives || []);
+      })
       .catch(() => setError("Αδυναμία φόρτωσης διαθεσιμότητας."))
       .finally(() => setLoading(false));
   }, [serviceId, staffId, date]);
@@ -297,27 +316,98 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
           {step === 3 && (
             <div>
               <h1 className="font-display text-3xl text-charcoal">Διαθέσιμες ώρες</h1>
+              <p className="mt-2 text-sm text-warm-gray">
+                Οι ώρες υπολογίζονται με βάση τη διάρκεια της υπηρεσίας (~
+                {selectedService?.durationMin || "—"}′). Κλεισμένες ώρες δεν
+                μπορούν να επιλεγούν.
+              </p>
               {loading ? (
                 <p className="mt-6 text-warm-gray">Έλεγχος διαθεσιμότητας…</p>
-              ) : slots.length === 0 ? (
-                <p className="mt-6 text-warm-gray">Δεν υπάρχουν διαθέσιμες ώρες για αυτή την ημέρα.</p>
               ) : (
-                <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-4">
-                  {slots.map((s) => (
-                    <button
-                      key={s.start}
-                      type="button"
-                      onClick={() => setSlot(s)}
-                      className={`rounded-xl border px-3 py-3 text-sm font-semibold transition ${
-                        slot?.start === s.start
-                          ? "border-pink bg-pink text-white"
-                          : "border-border hover:border-pink/40"
-                      }`}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
+                <>
+                  {busy.length > 0 && (
+                    <div className="mt-5">
+                      <p className="mb-2 text-xs font-semibold tracking-wide text-warm-gray uppercase">
+                        Κλεισμένες ώρες
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {busy.map((b) => (
+                          <div
+                            key={`${b.start}-${b.end}`}
+                            className="rounded-xl border border-border bg-bg-soft px-3 py-3 text-center text-sm text-warm-gray line-through"
+                            title="Ήδη κλεισμένο ραντεβού"
+                          >
+                            {b.label}–{b.endLabel}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {slots.length === 0 ? (
+                    <div className="mt-6 space-y-4">
+                      <p className="text-warm-gray">
+                        Δεν υπάρχουν διαθέσιμες ώρες με {selectedStaff?.name || "αυτόν τον επαγγελματία"} για αυτή την ημέρα.
+                      </p>
+                      {alternatives.length > 0 ? (
+                        <div>
+                          <p className="mb-3 text-sm font-medium text-charcoal">
+                            Διαθέσιμοι άλλοι επαγγελματίες:
+                          </p>
+                          <div className="grid gap-2 sm:grid-cols-2">
+                            {alternatives.map((alt) => (
+                              <button
+                                key={alt.staffId}
+                                type="button"
+                                onClick={() => {
+                                  setStaffId(alt.staffId);
+                                  setSlot(null);
+                                }}
+                                className="rounded-2xl border border-border px-4 py-4 text-left transition hover:border-pink/40"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <span
+                                    className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold text-white"
+                                    style={{ background: alt.color }}
+                                  >
+                                    {alt.staffName.charAt(0)}
+                                  </span>
+                                  <div>
+                                    <p className="font-semibold text-charcoal">{alt.staffName}</p>
+                                    <p className="text-xs text-warm-gray">
+                                      {alt.slotsCount} διαθέσιμες · από {alt.nextLabel}
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-warm-gray">
+                          Δοκιμάστε άλλη ημερομηνία.
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-4">
+                      {slots.map((s) => (
+                        <button
+                          key={s.start}
+                          type="button"
+                          onClick={() => setSlot(s)}
+                          className={`rounded-xl border px-3 py-3 text-sm font-semibold transition ${
+                            slot?.start === s.start
+                              ? "border-pink bg-pink text-white"
+                              : "border-border hover:border-pink/40"
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}

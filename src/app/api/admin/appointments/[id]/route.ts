@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { assertSlotAvailable } from "@/lib/availability";
+import { parseBookingStart } from "@/lib/time";
 import {
   notifyCancellation,
   notifyReschedule,
@@ -13,7 +14,7 @@ type Ctx = { params: Promise<{ id: string }> };
 
 const patchSchema = z.object({
   status: z.enum(["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED", "NO_SHOW"]).optional(),
-  startAt: z.string().datetime().optional(),
+  startAt: z.string().min(10).optional(),
   staffId: z.string().optional(),
   serviceId: z.string().optional(),
   notes: z.string().nullable().optional(),
@@ -48,7 +49,10 @@ export async function PATCH(request: Request, ctx: Ctx) {
     Boolean(data.serviceId && data.serviceId !== existing.serviceId);
 
   if (isReschedule) {
-    nextStart = data.startAt ? new Date(data.startAt) : existing.startAt;
+    nextStart = data.startAt ? parseBookingStart(data.startAt) : existing.startAt;
+    if (Number.isNaN(nextStart.getTime())) {
+      return NextResponse.json({ error: "Μη έγκυρη ώρα ραντεβού." }, { status: 400 });
+    }
     const availability = await assertSlotAvailable({
       serviceId: nextServiceId,
       staffId: nextStaffId,

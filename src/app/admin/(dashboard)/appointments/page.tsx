@@ -83,7 +83,7 @@ export default function AppointmentsPage() {
   async function createAppointment(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    const startAt = new Date(`${form.date}T${form.time}:00`).toISOString();
+    const startAt = `${form.date}T${form.time}:00`;
     const res = await fetch("/api/admin/appointments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
