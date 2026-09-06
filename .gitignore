@@ -44,3 +44,8 @@ prisma/*.db
 prisma/*.db-journal
 .env
 package.json.tmp
+
+*.db
+*.db-journal
+prisma/*.db
+prisma/*.db-journal
