@@ -19,6 +19,18 @@ export async function getActiveServicesGrouped() {
       services: {
         where: { status: "ACTIVE" },
         orderBy: { displayOrder: "asc" },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          durationMin: true,
+          icon: true,
+          imageUrl: true,
+          displayOrder: true,
+          categoryId: true,
+          status: true,
+        },
       },
     },
   });
