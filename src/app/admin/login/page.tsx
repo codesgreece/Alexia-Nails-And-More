@@ -28,9 +28,13 @@ export default async function AdminLoginPage({
 }: {
   searchParams: Promise<{ error?: string; callbackUrl?: string }>;
 }) {
-  const session = await auth();
-  if (session?.user) {
-    redirect("/admin");
+  try {
+    const session = await auth();
+    if (session?.user) {
+      redirect("/admin");
+    }
+  } catch {
+    // Auth misconfiguration should not blank the login form.
   }
 
   const params = await searchParams;

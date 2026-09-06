@@ -2,7 +2,7 @@
 set -euo pipefail
 
 export DATABASE_URL="${DATABASE_URL:-file:./dev.db}"
-export AUTH_SECRET="${AUTH_SECRET:-${NEXTAUTH_SECRET:-vercel-build-placeholder-change-me}}"
+export AUTH_SECRET="${AUTH_SECRET:-${NEXTAUTH_SECRET:-alexia-nails-and-more/HTMvgwxUGnGiqT4rgFTe//aMiWhADSaOZ76OSKvdam0B4LeNmff1L2p4oQXJlP4d}}"
 export NEXTAUTH_URL="${NEXTAUTH_URL:-http://localhost:3000}"
 export ADMIN_EMAIL="${ADMIN_EMAIL:-admin@alexianails.gr}"
 export ADMIN_PASSWORD="${ADMIN_PASSWORD:-AlexiaAdmin2026!}"
