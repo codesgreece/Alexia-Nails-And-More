@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarHeart, Instagram, Phone } from "lucide-react";
+import { CalendarHeart, Phone } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { formatPhoneLink } from "@/lib/utils";
 
 export function FloatingActions({
@@ -40,7 +41,7 @@ export function FloatingActions({
           className="flex h-12 w-12 items-center justify-center rounded-full bg-pink text-white shadow-lg transition hover:scale-105"
           aria-label="Instagram"
         >
-          <Instagram className="h-5 w-5" />
+          <InstagramIcon className="h-5 w-5" />
         </a>
       </div>
     </div>

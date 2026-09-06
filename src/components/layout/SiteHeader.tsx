@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X, Instagram, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
+import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { cn, formatPhoneLink } from "@/lib/utils";
 
 const NAV = [
@@ -93,7 +94,7 @@ export function SiteHeader({
               className="focus-ring rounded-full p-2 text-charcoal hover:text-pink"
               aria-label="Instagram"
             >
-              <Instagram className="h-4 w-4" />
+              <InstagramIcon className="h-4 w-4" />
             </a>
             <Link href="/booking" className="btn-primary text-sm">
               Κλείσε Ραντεβού

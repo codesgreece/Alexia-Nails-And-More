@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { EB_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import { CookieConsent } from "@/components/public/CookieConsent";
 import { LoadingScreen } from "@/components/public/LoadingScreen";
 import { getBusinessSettings } from "@/lib/data";
 
-const display = Cormorant_Garamond({
+const display = EB_Garamond({
   variable: "--font-display",
-  subsets: ["latin", "greek"],
+  subsets: ["latin", "latin-ext", "greek"],
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
 
 const body = Manrope({
   variable: "--font-body",
-  subsets: ["latin", "greek"],
+  subsets: ["latin", "latin-ext", "greek"],
   weight: ["400", "500", "600", "700"],
 });
 
