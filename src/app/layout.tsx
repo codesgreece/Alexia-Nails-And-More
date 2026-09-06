@@ -5,6 +5,8 @@ import { CookieConsent } from "@/components/public/CookieConsent";
 import { LoadingScreen } from "@/components/public/LoadingScreen";
 import { getBusinessSettings } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 const display = EB_Garamond({
   variable: "--font-display",
   subsets: ["latin", "latin-ext", "greek"],
