@@ -16,7 +16,7 @@ export function BrandLogo({
     <img
       src={src}
       alt={alt}
-      className={cn("h-auto w-auto object-contain", className)}
+      className={cn("block h-10 w-auto max-w-full object-contain object-left", className)}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
     />

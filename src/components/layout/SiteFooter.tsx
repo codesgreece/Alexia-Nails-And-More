@@ -39,7 +39,7 @@ export function SiteFooter({
           <BrandLogo
             src={logoUrl}
             alt={businessName}
-            className="mb-4 h-12 max-w-[180px] brightness-0 invert"
+            className="mb-4 h-11 w-auto max-w-[180px] brightness-0 invert"
           />
           <p className="max-w-xs text-sm leading-relaxed text-white/70">
             Premium nail & beauty studio στα Νέα Μουδανιά. Εμπειρία, φροντίδα και

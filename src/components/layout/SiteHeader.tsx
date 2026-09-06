@@ -60,7 +60,7 @@ export function SiteHeader({
             <BrandLogo
               src={logoUrl}
               alt={businessName}
-              className="h-10 max-w-[150px] md:h-12"
+              className="h-9 w-auto max-w-[140px] md:h-11 md:max-w-[170px]"
               priority
             />
           </Link>

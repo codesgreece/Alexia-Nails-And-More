@@ -57,6 +57,10 @@ a {
 
 img {
   max-width: 100%;
+}
+
+/* Only auto-height when no explicit utility height is set */
+img:not([class*="h-"]) {
   height: auto;
 }
 

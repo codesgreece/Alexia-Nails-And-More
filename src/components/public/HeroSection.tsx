@@ -32,8 +32,9 @@ export function HeroSection({
         className="object-cover"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/88 to-white/35" />
-      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/40" />
+      {/* Soft scrim for text — keeps the photo full-bleed, not a white panel */}
+      <div className="absolute inset-0 bg-gradient-to-r from-white/92 via-white/55 to-transparent md:via-white/45" />
+      <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-transparent to-white/25" />
 
       {!reduce && (
         <>
@@ -50,19 +51,19 @@ export function HeroSection({
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-2xl"
+          className="max-w-xl"
         >
           <BrandLogo
             src={logoUrl}
             alt={businessName}
-            className="mb-8 h-14 max-w-[220px] md:h-16"
+            className="mb-7 h-16 w-auto max-w-[240px] md:h-[4.5rem] md:max-w-[280px]"
             priority
           />
           <p className="eyebrow mb-4">{eyebrow}</p>
-          <h1 className="font-display text-5xl leading-[1.05] text-charcoal md:text-7xl whitespace-pre-line">
+          <h1 className="font-display text-4xl leading-[1.08] text-charcoal sm:text-5xl md:text-6xl whitespace-pre-line">
             {title}
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-warm-gray md:text-lg">
+          <p className="mt-5 max-w-lg text-base leading-relaxed text-warm-gray md:text-lg">
             {subtitle}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">

@@ -36,7 +36,7 @@ export function LoadingScreen({
       <BrandLogo
         src={logoUrl}
         alt={businessName}
-        className="mb-6 w-[180px] animate-fade-up"
+        className="mb-6 h-16 w-auto max-w-[200px] animate-fade-up"
         priority
       />
       <div className="loading-line mb-4" />

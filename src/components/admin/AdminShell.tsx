@@ -64,7 +64,7 @@ export function AdminShell({
           <BrandLogo
             src={logoUrl || "/images/alexia-logo.png"}
             alt="Alexia Nails & More"
-            className="h-11 w-11 rounded-full object-cover"
+            className="h-10 w-auto max-w-[120px]"
           />
           <div>
             <p className="font-display text-lg leading-tight text-charcoal">Alexia Nails</p>
