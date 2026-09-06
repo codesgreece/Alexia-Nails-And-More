@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { formatDateGR } from "@/lib/utils";
 
 type Service = {
@@ -168,7 +168,7 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
     <div className="mx-auto max-w-3xl">
       <div className="mb-8 flex items-center justify-between gap-4">
         <Link href="/">
-          <Image src={logoUrl} alt="Alexia Nails & More" width={160} height={54} className="h-10 w-auto" />
+          <BrandLogo src={logoUrl} alt="Alexia Nails & More" className="h-10 max-w-[160px]" priority />
         </Link>
         <p className="text-xs tracking-[0.18em] text-warm-gray uppercase">
           Online Booking
@@ -215,7 +215,15 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
                   <button
                     key={s.id}
                     type="button"
-                    onClick={() => setServiceId(s.id)}
+                    onClick={() => {
+                      setServiceId(s.id);
+                      setError("");
+                    }}
+                    onDoubleClick={() => {
+                      setServiceId(s.id);
+                      setError("");
+                      setStep(1);
+                    }}
                     className={`w-full rounded-2xl border px-4 py-4 text-left transition ${
                       serviceId === s.id
                         ? "border-pink bg-pink-soft/40"
@@ -406,7 +414,7 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
       </AnimatePresence>
 
       {step < 5 ? (
-        <div className="mt-6 flex justify-between">
+        <div className="relative z-[70] mt-6 mb-28 flex justify-between md:mb-6">
           <button
             type="button"
             className="btn-secondary"

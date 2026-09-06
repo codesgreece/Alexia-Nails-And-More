@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export function HeroSection({
   logoUrl,
@@ -51,12 +52,10 @@ export function HeroSection({
           transition={{ duration: 0.8 }}
           className="max-w-2xl"
         >
-          <Image
+          <BrandLogo
             src={logoUrl}
             alt={businessName}
-            width={220}
-            height={74}
-            className="mb-8 h-14 w-auto md:h-16"
+            className="mb-8 h-14 max-w-[220px] md:h-16"
             priority
           />
           <p className="eyebrow mb-4">{eyebrow}</p>

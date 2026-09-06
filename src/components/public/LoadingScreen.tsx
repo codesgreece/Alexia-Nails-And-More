@@ -1,7 +1,7 @@
 "use client";
 
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 export function LoadingScreen({
   logoUrl,
@@ -33,12 +33,10 @@ export function LoadingScreen({
       aria-hidden={!visible}
       role="status"
     >
-      <Image
+      <BrandLogo
         src={logoUrl}
         alt={businessName}
-        width={220}
-        height={80}
-        className="mb-6 h-auto w-[180px] animate-fade-up"
+        className="mb-6 w-[180px] animate-fade-up"
         priority
       />
       <div className="loading-line mb-4" />

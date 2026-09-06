@@ -22,7 +22,7 @@ export function CookieConsent() {
     <div
       role="dialog"
       aria-label="Συγκατάθεση cookies"
-      className="fixed bottom-4 left-4 right-4 z-[90] mx-auto max-w-xl rounded-2xl border border-border bg-white p-5 shadow-[0_20px_60px_rgba(48,48,48,0.15)] md:bottom-6 md:left-6 md:right-auto"
+      className="fixed bottom-24 left-4 right-4 z-[60] mx-auto max-w-xl rounded-2xl border border-border bg-white p-5 shadow-[0_20px_60px_rgba(48,48,48,0.15)] md:bottom-6 md:left-6 md:right-auto"
     >
       <p className="font-display text-2xl text-charcoal">Cookies & Ιδιωτικότητα</p>
       <p className="mt-2 text-sm leading-relaxed text-warm-gray">

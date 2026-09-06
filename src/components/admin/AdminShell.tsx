@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
@@ -21,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -61,12 +61,10 @@ export function AdminShell({
         )}
       >
         <div className="flex items-center gap-3 border-b border-[var(--border)] px-5 py-5">
-          <Image
-            src={logoUrl || "/images/logo.svg"}
+          <BrandLogo
+            src={logoUrl || "/images/alexia-logo.png"}
             alt="Alexia Nails & More"
-            width={44}
-            height={44}
-            className="rounded-full object-contain"
+            className="h-11 w-11 rounded-full object-cover"
           />
           <div>
             <p className="font-display text-lg leading-tight text-charcoal">Alexia Nails</p>

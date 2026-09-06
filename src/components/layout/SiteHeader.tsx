@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { cn, formatPhoneLink } from "@/lib/utils";
 
@@ -57,12 +57,10 @@ export function SiteHeader({
       >
         <div className="container-premium flex h-[72px] items-center justify-between md:h-[84px]">
           <Link href="/" className="focus-ring rounded-lg" aria-label={businessName}>
-            <Image
+            <BrandLogo
               src={logoUrl}
               alt={businessName}
-              width={160}
-              height={54}
-              className="h-10 w-auto md:h-12"
+              className="h-10 max-w-[150px] md:h-12"
               priority
             />
           </Link>

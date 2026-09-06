@@ -226,7 +226,7 @@ model BusinessSettings {
   instagramHandle    String   @default("@alexia_nails_and_more")
   facebookUrl        String?
   whatsappNumber     String?
-  logoUrl            String   @default("/images/logo.svg")
+  logoUrl            String   @default("/images/alexia-logo.png")
   heroEyebrow        String   @default("NAILS • BEAUTY • WELLNESS")
   heroTitle          String   @default("Η ομορφιά βρίσκεται\nστη λεπτομέρεια.")
   heroSubtitle       String   @default("Εμπειρία, φροντίδα και αισθητική σε έναν χώρο δημιουργημένο για να σε κάνει να νιώθεις ξεχωριστή.")

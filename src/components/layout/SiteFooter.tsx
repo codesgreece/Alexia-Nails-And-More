@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { DAY_NAMES_GR, formatPhoneLink } from "@/lib/utils";
 
 type Hour = {
@@ -36,12 +36,10 @@ export function SiteFooter({
     <footer className="border-t border-border bg-charcoal text-white">
       <div className="container-premium grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <Image
+          <BrandLogo
             src={logoUrl}
             alt={businessName}
-            width={180}
-            height={60}
-            className="mb-4 h-12 w-auto brightness-0 invert"
+            className="mb-4 h-12 max-w-[180px] brightness-0 invert"
           />
           <p className="max-w-xs text-sm leading-relaxed text-white/70">
             Premium nail & beauty studio στα Νέα Μουδανιά. Εμπειρία, φροντίδα και
