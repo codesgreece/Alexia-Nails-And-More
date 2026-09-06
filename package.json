@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "prisma generate && prisma db push && tsx prisma/seed.ts && cp prisma/dev.db prisma/prod.db",
+    "prebuild": "bash scripts/prebuild.sh",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
