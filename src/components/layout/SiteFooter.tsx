@@ -123,7 +123,15 @@ export function SiteFooter({
 
       <div className="border-t border-white/10">
         <div className="container-premium flex flex-col gap-3 py-5 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} {businessName}. All rights reserved.</p>
+          <div className="space-y-1">
+            <p>© {new Date().getFullYear()} {businessName}. All rights reserved.</p>
+            <p>
+              Σχεδιασμός &amp; ανάπτυξη από Χαράλαμπο Χριστόπουλο ·{" "}
+              <a href="tel:+306936732844" className="hover:text-white">
+                693 673 2844
+              </a>
+            </p>
+          </div>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-white">Απόρρητο</Link>
             <Link href="/terms" className="hover:text-white">Όροι</Link>
