@@ -63,7 +63,7 @@ export function MobileBottomNav() {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "relative z-10 flex h-full flex-col items-center justify-center gap-0.5 rounded-full px-1 py-2 text-[10px] font-medium tracking-wide transition-colors duration-300",
-                  active ? "text-white" : "text-white/55 hover:text-white/85"
+                  active ? "!text-white" : "!text-white/70 hover:!text-white"
                 )}
               >
                 {active && (
@@ -76,8 +76,11 @@ export function MobileBottomNav() {
                 <Icon
                   className={cn(
                     "h-[1.15rem] w-[1.15rem] transition-transform duration-300",
-                    active && "scale-110 drop-shadow-[0_0_10px_rgba(255,255,255,0.35)]"
+                    active
+                      ? "scale-110 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]"
+                      : "opacity-90"
                   )}
+                  stroke="currentColor"
                   strokeWidth={active ? 2.25 : 1.85}
                   aria-hidden="true"
                 />

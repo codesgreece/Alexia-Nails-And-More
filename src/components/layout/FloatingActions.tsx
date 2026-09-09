@@ -52,11 +52,15 @@ export function FloatingActions({
 
       <a
         href={formatPhoneLink(phone)}
-        className={cn(bubbleClass, "bg-charcoal hover:bg-pink")}
+        className={cn(
+          bubbleClass,
+          "border border-white/35 bg-[rgba(28,28,30,0.88)] shadow-[0_10px_28px_rgba(0,0,0,0.35)] backdrop-blur-md hover:border-pink/50 hover:bg-pink"
+        )}
         aria-label="Κλήση"
         title="Κλήση"
+        style={{ color: "#fff" }}
       >
-        <Phone className="h-5 w-5 text-white" stroke="white" aria-hidden="true" />
+        <Phone className="h-5 w-5" stroke="currentColor" aria-hidden="true" />
       </a>
 
       <a
