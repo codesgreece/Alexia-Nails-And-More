@@ -10,7 +10,7 @@ const patchSchema = z.object({
   name: z.string().min(1).optional(),
   slug: z.string().optional(),
   description: z.string().nullable().optional(),
-  durationMin: z.number().int().positive().optional(),
+  durationMin: z.number().int().min(0).optional(),
   icon: z.string().nullable().optional(),
   imageUrl: z.string().nullable().optional(),
   displayOrder: z.number().int().optional(),

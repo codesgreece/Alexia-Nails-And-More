@@ -23,7 +23,7 @@ const createSchema = z.object({
   name: z.string().min(1),
   slug: z.string().optional(),
   description: z.string().nullable().optional(),
-  durationMin: z.number().int().positive(),
+  durationMin: z.number().int().min(0),
   icon: z.string().nullable().optional(),
   imageUrl: z.string().nullable().optional(),
   displayOrder: z.number().int().optional(),

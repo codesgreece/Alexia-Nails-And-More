@@ -83,7 +83,7 @@ async function main() {
       name: "Έλενα",
       slug: "elena",
       bio: null,
-      specialties: "Μανικιούρ, Πεντικιούρ, Nail Art",
+      specialties: "Μανικιούρ, Πεντικιούρ, Nail Art, Brows",
       color: "#91C8C0",
       status: "ACTIVE",
       displayOrder: 2,
@@ -94,7 +94,7 @@ async function main() {
       name: "Βάσω",
       slug: "vaso",
       bio: null,
-      specialties: "Μανικιούρ, Πεντικιούρ, Brows",
+      specialties: "Μανικιούρ, Πεντικιούρ",
       color: "#1E3A8A",
       status: "ACTIVE",
       displayOrder: 3,
@@ -151,27 +151,29 @@ async function main() {
     },
   });
 
+  // Durations start at 0 until set manually in admin.
   const services = [
-    { categoryId: manicure.id, name: "Μανικιούρ (απλό βερνίκι)", slug: "manicure-simple", description: "Κλασική περιποίηση νυχιών με απλό βερνίκι.", durationMin: 45, icon: "nail", order: 1 },
-    { categoryId: manicure.id, name: "Μανικιούρ Special (απλό)", slug: "manicure-special", description: "Αναβαθμισμένη περιποίηση με απλό βερνίκι.", durationMin: 50, icon: "sparkle", order: 2 },
-    { categoryId: manicure.id, name: "Μανικιούρ Ενισχυμένο Ημιμόνιμο", slug: "manicure-gel", description: "Ημιμόνιμο βερνίκι με ενισχυμένη αντοχή.", durationMin: 60, icon: "gel", order: 3 },
-    { categoryId: manicure.id, name: "Ενίσχυση Φυσικού Νυχιού", slug: "natural-nail-strengthening", description: "Ενίσχυση και προστασία του φυσικού νυχιού.", durationMin: 60, icon: "shield", order: 4 },
-    { categoryId: manicure.id, name: "Gelly Tips (με χρώμα)", slug: "gelly-tips", description: "Gelly tips με χρώμα για φυσικό αποτέλεσμα.", durationMin: 90, icon: "tips", order: 5 },
-    { categoryId: manicure.id, name: "Επιμήκυνση (gel, acrylic, acrygel)", slug: "extensions", description: "Επιμήκυνση με gel, acrylic ή acrygel.", durationMin: 120, icon: "extend", order: 6 },
-    { categoryId: manicure.id, name: "Συντήρηση (gel, acrygel)", slug: "maintenance", description: "Συντήρηση τεχνητών νυχιών gel ή acrygel.", durationMin: 75, icon: "refresh", order: 7 },
-    { categoryId: manicure.id, name: "Nail Art (και σχέδια)", slug: "nail-art", description: "Καλλιτεχνικά σχέδια και λεπτομέρειες στα νύχια.", durationMin: 30, icon: "art", order: 8 },
-    { categoryId: manicure.id, name: "Γαλλικό – Όμπρε", slug: "french-ombre", description: "Κλασικό γαλλικό ή όμπρε φινίρισμα.", durationMin: 20, icon: "french", order: 9 },
-    { categoryId: manicure.id, name: "Αφαίρεση Ημιμόνιμου", slug: "gel-removal", description: "Ασφαλής αφαίρεση ημιμόνιμου βερνικιού.", durationMin: 30, icon: "remove", order: 10 },
-    { categoryId: manicure.id, name: "Αφαίρεση Τεχνητών", slug: "extension-removal", description: "Προσεκτική αφαίρεση τεχνητών νυχιών.", durationMin: 45, icon: "remove", order: 11 },
-    { categoryId: pedicure.id, name: "Πεντικιούρ (χωρίς βαφή)", slug: "pedicure-no-polish", description: "Πλήρης περιποίηση ποδιών χωρίς βαφή.", durationMin: 45, icon: "foot", order: 1 },
-    { categoryId: pedicure.id, name: "Πεντικιούρ (με απλό μανό)", slug: "pedicure-simple", description: "Πεντικιούρ με απλό βερνίκι.", durationMin: 55, icon: "foot", order: 2 },
-    { categoryId: pedicure.id, name: "Πεντικιούρ (ημιμόνιμη βαφή + full περιποίηση)", slug: "pedicure-gel", description: "Πλήρης περιποίηση με ημιμόνιμη βαφή.", durationMin: 70, icon: "foot", order: 3 },
-    { categoryId: pedicure.id, name: "Πεντικιούρ Θεραπευτικό", slug: "pedicure-therapeutic", description: "Θεραπευτική φροντίδα με γνώσεις ποδολογίας.", durationMin: 60, icon: "heal", order: 4 },
-    { categoryId: brows.id, name: "Brow Lift", slug: "brow-lift", description: "Αναδιαμόρφωση και ανύψωση φρυδιών.", durationMin: 45, icon: "brow", order: 1 },
-    { categoryId: brows.id, name: "Καθαρισμός φρυδιών", slug: "brow-clean", description: "Καθαρισμός και περιποίηση φρυδιών.", durationMin: 20, icon: "brow", order: 2 },
-    { categoryId: brows.id, name: "Σχηματισμός φρυδιών", slug: "brow-shape", description: "Σχήμα που αναδεικνύει το βλέμμα σας.", durationMin: 25, icon: "brow", order: 3 },
-    { categoryId: brows.id, name: "Σχηματισμός φρυδιών με βαφή", slug: "brow-shape-tint", description: "Σχήμα και βαφή για πιο έντονο αποτέλεσμα.", durationMin: 35, icon: "brow", order: 4 },
-    { categoryId: lashes.id, name: "Lash Lift", slug: "lash-lift", description: "Φυσική ανύψωση και καμπύλη στις βλεφαρίδες.", durationMin: 50, icon: "lash", order: 1 },
+    { categoryId: manicure.id, name: "Μανικιούρ (απλό βερνίκι)", slug: "manicure-simple", description: "Κλασική περιποίηση νυχιών με απλό βερνίκι.", icon: "nail", order: 1, staff: staffList },
+    { categoryId: manicure.id, name: "Μανικιούρ Special (απλό)", slug: "manicure-special", description: "Αναβαθμισμένη περιποίηση με απλό βερνίκι.", icon: "sparkle", order: 2, staff: staffList },
+    { categoryId: manicure.id, name: "Μανικιούρ Ενισχυμένο Ημιμόνιμο", slug: "manicure-gel", description: "Ημιμόνιμο βερνίκι με ενισχυμένη αντοχή.", icon: "gel", order: 3, staff: staffList },
+    { categoryId: manicure.id, name: "Ενίσχυση Φυσικού Νυχιού", slug: "natural-nail-strengthening", description: "Ενίσχυση και προστασία του φυσικού νυχιού.", icon: "shield", order: 4, staff: staffList },
+    { categoryId: manicure.id, name: "Gelly Tips (με χρώμα)", slug: "gelly-tips", description: "Gelly tips με χρώμα για φυσικό αποτέλεσμα.", icon: "tips", order: 5, staff: staffList },
+    { categoryId: manicure.id, name: "Επιμήκυνση (gel, acrylic, acrygel)", slug: "extensions", description: "Επιμήκυνση με gel, acrylic ή acrygel.", icon: "extend", order: 6, staff: staffList },
+    { categoryId: manicure.id, name: "Συντήρηση (gel, acrygel)", slug: "maintenance", description: "Συντήρηση τεχνητών νυχιών gel ή acrygel.", icon: "refresh", order: 7, staff: staffList },
+    { categoryId: manicure.id, name: "Nail Art (και σχέδια)", slug: "nail-art", description: "Καλλιτεχνικά σχέδια και λεπτομέρειες στα νύχια.", icon: "art", order: 8, staff: staffList },
+    { categoryId: manicure.id, name: "Γαλλικό – Όμπρε", slug: "french-ombre", description: "Κλασικό γαλλικό ή όμπρε φινίρισμα.", icon: "french", order: 9, staff: staffList },
+    { categoryId: manicure.id, name: "Αφαίρεση Ημιμόνιμου", slug: "gel-removal", description: "Ασφαλής αφαίρεση ημιμόνιμου βερνικιού.", icon: "remove", order: 10, staff: staffList },
+    { categoryId: manicure.id, name: "Αφαίρεση Τεχνητών", slug: "extension-removal", description: "Προσεκτική αφαίρεση τεχνητών νυχιών.", icon: "remove", order: 11, staff: staffList },
+    { categoryId: pedicure.id, name: "Πεντικιούρ (χωρίς βαφή)", slug: "pedicure-no-polish", description: "Πλήρης περιποίηση ποδιών χωρίς βαφή.", icon: "foot", order: 1, staff: staffList },
+    { categoryId: pedicure.id, name: "Πεντικιούρ (με απλό μανό)", slug: "pedicure-simple", description: "Πεντικιούρ με απλό βερνίκι.", icon: "foot", order: 2, staff: staffList },
+    { categoryId: pedicure.id, name: "Πεντικιούρ (ημιμόνιμη βαφή + full περιποίηση)", slug: "pedicure-gel", description: "Πλήρης περιποίηση με ημιμόνιμη βαφή.", icon: "foot", order: 3, staff: staffList },
+    { categoryId: pedicure.id, name: "Πεντικιούρ Θεραπευτικό", slug: "pedicure-therapeutic", description: "Θεραπευτική φροντίδα με γνώσεις ποδολογίας.", icon: "heal", order: 4, staff: staffList },
+    // Brows: Έλενα (+ Αλεξία για Brow Lift specialty). Όχι Βάσω.
+    { categoryId: brows.id, name: "Brow Lift", slug: "brow-lift", description: "Αναδιαμόρφωση και ανύψωση φρυδιών.", icon: "brow", order: 1, staff: [alexia, elena] },
+    { categoryId: brows.id, name: "Καθαρισμός φρυδιών", slug: "brow-clean", description: "Καθαρισμός και περιποίηση φρυδιών.", icon: "brow", order: 2, staff: [elena] },
+    { categoryId: brows.id, name: "Σχηματισμός φρυδιών", slug: "brow-shape", description: "Σχήμα που αναδεικνύει το βλέμμα σας.", icon: "brow", order: 3, staff: [elena] },
+    { categoryId: brows.id, name: "Σχηματισμός φρυδιών με βαφή", slug: "brow-shape-tint", description: "Σχήμα και βαφή για πιο έντονο αποτέλεσμα.", icon: "brow", order: 4, staff: [elena] },
+    { categoryId: lashes.id, name: "Lash Lift", slug: "lash-lift", description: "Φυσική ανύψωση και καμπύλη στις βλεφαρίδες.", icon: "lash", order: 1, staff: [alexia, elena] },
   ];
 
   for (const svc of services) {
@@ -180,14 +182,14 @@ async function main() {
         name: svc.name,
         slug: svc.slug,
         description: svc.description,
-        durationMin: svc.durationMin,
+        durationMin: 0,
         icon: svc.icon,
         displayOrder: svc.order,
         status: "ACTIVE",
         categoryId: svc.categoryId,
       },
     });
-    for (const s of staffList) {
+    for (const s of svc.staff) {
       await prisma.staffService.create({
         data: { staffId: s.id, serviceId: created.id },
       });

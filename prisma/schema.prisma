@@ -54,7 +54,7 @@ model Service {
   name         String
   slug         String   @unique
   description  String?
-  durationMin  Int      @default(45)
+  durationMin  Int      @default(0)
   priceCents   Int? // internal only — never shown publicly
   icon         String?
   imageUrl     String?

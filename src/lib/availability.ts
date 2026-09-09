@@ -105,6 +105,7 @@ export async function getDaySchedule(params: {
   const slotStep = settings?.bookingSlotMinutes ?? 15;
   const leadHours = settings?.bookingLeadHours ?? 2;
   const durationMin = service.durationMin;
+  if (durationMin <= 0) return { ...empty, durationMin };
 
   if (specialHour?.isClosed) return { ...empty, durationMin };
   if (!specialHour && (!openingHour || openingHour.isClosed)) {

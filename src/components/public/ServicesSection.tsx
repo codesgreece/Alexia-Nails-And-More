@@ -98,7 +98,9 @@ export function ServicesSection({ categories }: { categories: Category[] }) {
                         {svc.description}
                       </p>
                       <p className="mt-3 text-xs tracking-wide text-mint uppercase">
-                        Διάρκεια ~{svc.durationMin}&apos;
+                        {svc.durationMin > 0
+                          ? `Διάρκεια ~${svc.durationMin}'`
+                          : "Διάρκεια κατόπιν ενημέρωσης"}
                       </p>
                       <Link
                         href={`/booking?service=${svc.id}`}

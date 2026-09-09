@@ -255,7 +255,9 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
                         <p className="font-semibold text-charcoal">{s.name}</p>
                         <p className="mt-1 text-sm text-warm-gray">{s.description}</p>
                       </div>
-                      <span className="text-xs text-warm-gray">~{s.durationMin}&apos;</span>
+                      <span className="text-xs text-warm-gray">
+                        {s.durationMin > 0 ? `~${s.durationMin}'` : "—"}
+                      </span>
                     </div>
                   </button>
                 ))}
@@ -317,9 +319,9 @@ export function BookingWizard({ logoUrl }: { logoUrl: string }) {
             <div>
               <h1 className="font-display text-3xl text-charcoal">Διαθέσιμες ώρες</h1>
               <p className="mt-2 text-sm text-warm-gray">
-                Οι ώρες υπολογίζονται με βάση τη διάρκεια της υπηρεσίας (~
-                {selectedService?.durationMin || "—"}′). Κλεισμένες ώρες δεν
-                μπορούν να επιλεγούν.
+                {selectedService && selectedService.durationMin > 0
+                  ? `Οι ώρες υπολογίζονται με βάση τη διάρκεια της υπηρεσίας (~${selectedService.durationMin}′). Κλεισμένες ώρες δεν μπορούν να επιλεγούν.`
+                  : "Η διάρκεια αυτής της υπηρεσίας δεν έχει οριστεί ακόμη. Δοκιμάστε αργότερα ή επικοινωνήστε μαζί μας."}
               </p>
               {loading ? (
                 <p className="mt-6 text-warm-gray">Έλεγχος διαθεσιμότητας…</p>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Plus } from "lucide-react";
+import { Clock3, Plus } from "lucide-react";
 
 type Category = { id: string; name: string; displayOrder: number };
 type Staff = { id: string; name: string };
@@ -21,7 +21,7 @@ const empty = {
   id: "",
   name: "",
   description: "",
-  durationMin: 45,
+  durationMin: 0,
   displayOrder: 0,
   status: "ACTIVE",
   categoryId: "",
@@ -35,6 +35,9 @@ export default function ServicesPage() {
   const [form, setForm] = useState(empty);
   const [catName, setCatName] = useState("");
   const [editing, setEditing] = useState(false);
+  const [durationsMode, setDurationsMode] = useState(false);
+  const [durationDrafts, setDurationDrafts] = useState<Record<string, number>>({});
+  const [savingDurations, setSavingDurations] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -47,9 +50,13 @@ export default function ServicesPage() {
     const svcData = await svc.json();
     const catData = await cat.json();
     const stData = await st.json();
-    setServices(svcData.services || []);
+    const list: Service[] = svcData.services || [];
+    setServices(list);
     setCategories(catData.categories || []);
     setStaff((stData.staff || []).filter((s: { status: string }) => s.status === "ACTIVE"));
+    setDurationDrafts(
+      Object.fromEntries(list.map((s) => [s.id, s.durationMin]))
+    );
     setLoading(false);
   }, []);
 
@@ -100,6 +107,28 @@ export default function ServicesPage() {
     load();
   }
 
+  async function saveDurations(e: React.FormEvent) {
+    e.preventDefault();
+    setSavingDurations(true);
+    const updates = services.map((s) => ({
+      id: s.id,
+      durationMin: Math.max(0, Number(durationDrafts[s.id] ?? s.durationMin) || 0),
+    }));
+    const res = await fetch("/api/admin/services/durations", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ updates }),
+    });
+    const data = await res.json();
+    setSavingDurations(false);
+    if (!res.ok) {
+      alert(data.error || "Σφάλμα αποθήκευσης διαρκειών");
+      return;
+    }
+    setDurationsMode(false);
+    load();
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -107,16 +136,32 @@ export default function ServicesPage() {
           <p className="eyebrow">Κατάλογος</p>
           <h1 className="font-display text-3xl md:text-4xl">Υπηρεσίες</h1>
         </div>
-        <button
-          type="button"
-          className="btn-primary !px-4 !py-2.5 text-sm"
-          onClick={() => {
-            setForm({ ...empty, categoryId: categories[0]?.id || "" });
-            setEditing(true);
-          }}
-        >
-          <Plus size={16} /> Νέα υπηρεσία
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="btn-secondary !px-4 !py-2.5 text-sm"
+            onClick={() => {
+              setEditing(false);
+              setDurationDrafts(
+                Object.fromEntries(services.map((s) => [s.id, s.durationMin]))
+              );
+              setDurationsMode(true);
+            }}
+          >
+            <Clock3 size={16} /> Ρύθμιση Διαρκειών
+          </button>
+          <button
+            type="button"
+            className="btn-primary !px-4 !py-2.5 text-sm"
+            onClick={() => {
+              setDurationsMode(false);
+              setForm({ ...empty, categoryId: categories[0]?.id || "" });
+              setEditing(true);
+            }}
+          >
+            <Plus size={16} /> Νέα υπηρεσία
+          </button>
+        </div>
       </div>
 
       <form onSubmit={saveCategory} className="admin-card flex flex-wrap items-end gap-3 p-4">
@@ -133,6 +178,65 @@ export default function ServicesPage() {
           Προσθήκη
         </button>
       </form>
+
+      {durationsMode && (
+        <form onSubmit={saveDurations} className="admin-card space-y-4 p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="font-display text-xl">Χειροκίνητη ρύθμιση διαρκειών</h2>
+              <p className="mt-1 text-sm text-warm-gray">
+                Ορίστε λεπτά για κάθε υπηρεσία. Το 0 σημαίνει ότι δεν εμφανίζεται διάρκεια
+                και δεν δίνονται online slots μέχρι να οριστεί.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                className="btn-primary !py-2.5 text-sm"
+                disabled={savingDurations}
+              >
+                {savingDurations ? "Αποθήκευση…" : "Αποθήκευση διαρκειών"}
+              </button>
+              <button
+                type="button"
+                className="btn-secondary !py-2.5 text-sm"
+                onClick={() => setDurationsMode(false)}
+              >
+                Ακύρωση
+              </button>
+            </div>
+          </div>
+          <div className="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)]">
+            {services.map((s) => (
+              <label
+                key={s.id}
+                className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="font-medium">{s.name}</span>
+                  <span className="mt-0.5 block text-xs text-warm-gray">{s.category.name}</span>
+                </span>
+                <span className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={0}
+                    step={5}
+                    className="w-24 rounded-xl border border-[var(--border)] px-3 py-2 text-right"
+                    value={durationDrafts[s.id] ?? 0}
+                    onChange={(e) =>
+                      setDurationDrafts((prev) => ({
+                        ...prev,
+                        [s.id]: Math.max(0, Number(e.target.value) || 0),
+                      }))
+                    }
+                  />
+                  <span className="text-warm-gray">λεπτά</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </form>
+      )}
 
       {editing && (
         <form onSubmit={save} className="admin-card grid gap-3 p-6 md:grid-cols-2">
@@ -162,7 +266,7 @@ export default function ServicesPage() {
           <input
             type="number"
             required
-            min={5}
+            min={0}
             placeholder="Διάρκεια (λεπτά)"
             className="rounded-xl border border-[var(--border)] px-3 py-2"
             value={form.durationMin}
@@ -255,7 +359,9 @@ export default function ServicesPage() {
                 <tr key={s.id} className="border-b border-[var(--border)] last:border-0">
                   <td className="px-4 py-3 font-medium">{s.name}</td>
                   <td className="px-4 py-3">{s.category.name}</td>
-                  <td className="px-4 py-3">{s.durationMin}&apos;</td>
+                  <td className="px-4 py-3">
+                    {s.durationMin > 0 ? `${s.durationMin}'` : "0' (μη ορισμένη)"}
+                  </td>
                   <td className="px-4 py-3">
                     {s.staff.map((x) => x.staff.name).join(", ") || "—"}
                   </td>
@@ -268,6 +374,7 @@ export default function ServicesPage() {
                       type="button"
                       className="text-sm font-medium text-pink hover:underline"
                       onClick={() => {
+                        setDurationsMode(false);
                         setForm({
                           id: s.id,
                           name: s.name,
