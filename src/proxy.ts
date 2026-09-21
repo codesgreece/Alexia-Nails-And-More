@@ -1,23 +1,20 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
-import { getAuthSecret } from "@/lib/auth-secret";
+import { getAdminToken, isAdminToken } from "@/lib/auth-token";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const secret = getAuthSecret();
+  const token = await getAdminToken(request);
+  const isAdmin = isAdminToken(token);
 
   if (pathname === "/admin/login") {
-    const token = await getToken({ req: request, secret });
-    if (token?.role === "ADMIN") {
+    if (isAdmin) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
     return NextResponse.next();
   }
 
-  const token = await getToken({ req: request, secret });
-
-  if (!token || token.role !== "ADMIN") {
+  if (!isAdmin) {
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);

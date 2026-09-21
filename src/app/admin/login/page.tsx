@@ -1,44 +1,19 @@
-import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { signIn, auth } from "@/lib/auth";
-
-async function loginAction(formData: FormData) {
-  "use server";
-  const email = String(formData.get("email") || "");
-  const password = String(formData.get("password") || "");
-  const callbackUrl = String(formData.get("callbackUrl") || "/admin");
-
-  try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: callbackUrl.startsWith("/admin") ? callbackUrl : "/admin",
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      redirect(`/admin/login?error=credentials&callbackUrl=${encodeURIComponent(callbackUrl)}`);
-    }
-    throw error;
-  }
-}
+import { auth } from "@/lib/auth";
+import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
 
 export default async function AdminLoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; callbackUrl?: string }>;
 }) {
-  try {
-    const session = await auth();
-    if (session?.user) {
-      redirect("/admin");
-    }
-  } catch {
-    // Auth misconfiguration should not blank the login form.
+  const session = await auth();
+  if (session?.user) {
+    redirect("/admin");
   }
 
   const params = await searchParams;
-  const hasError = params.error === "credentials";
   const callbackUrl = params.callbackUrl || "/admin";
 
   return (
@@ -65,39 +40,10 @@ export default async function AdminLoginPage({
             <p className="mt-2 text-sm tracking-[0.2em] text-pink uppercase">Admin Panel</p>
           </div>
 
-          {hasError && (
-            <div className="mb-5 rounded-xl border border-pink/20 bg-pink-soft/50 px-4 py-3 text-sm text-pink">
-              Λάθος email ή κωδικός πρόσβασης.
-            </div>
-          )}
-
-          <form action={loginAction} className="space-y-4">
-            <input type="hidden" name="callbackUrl" value={callbackUrl} />
-            <label className="block text-sm font-medium text-charcoal">
-              Email
-              <input
-                type="email"
-                name="email"
-                required
-                autoComplete="email"
-                defaultValue="admin@alexianails.gr"
-                className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-3 outline-none transition focus:border-pink"
-              />
-            </label>
-            <label className="block text-sm font-medium text-charcoal">
-              Κωδικός
-              <input
-                type="password"
-                name="password"
-                required
-                autoComplete="current-password"
-                className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-3 outline-none transition focus:border-pink"
-              />
-            </label>
-            <button type="submit" className="btn-primary mt-2 w-full">
-              Σύνδεση
-            </button>
-          </form>
+          <AdminLoginForm
+            callbackUrl={callbackUrl}
+            initialError={params.error === "credentials"}
+          />
         </div>
       </div>
     </div>
