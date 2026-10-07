@@ -174,10 +174,24 @@ export async function DELETE(_request: Request, ctx: Ctx) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await ctx.params;
-  await prisma.staff.update({
-    where: { id },
-    data: { status: "INACTIVE" },
-  });
+  const existing = await prisma.staff.findUnique({ where: { id } });
+  if (!existing) return NextResponse.json({ error: "Δεν βρέθηκε." }, { status: 404 });
 
-  return NextResponse.json({ ok: true });
+  const appointmentCount = await prisma.appointment.count({ where: { staffId: id } });
+  if (appointmentCount > 0) {
+    // Appointments keep a required staffId FK — deactivate instead of hard delete.
+    await prisma.staff.update({
+      where: { id },
+      data: { status: "INACTIVE" },
+    });
+    return NextResponse.json({
+      ok: true,
+      softDeleted: true,
+      message:
+        "Υπάρχουν ραντεβού συνδεδεμένα με αυτό το μέλος, οπότε απενεργοποιήθηκε αντί για οριστική διαγραφή.",
+    });
+  }
+
+  await prisma.staff.delete({ where: { id } });
+  return NextResponse.json({ ok: true, softDeleted: false });
 }
