@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { hasDurableDatabase, prisma } from "@/lib/prisma";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export default async function AdminDashboardLayout({
@@ -16,7 +16,11 @@ export default async function AdminDashboardLayout({
   const settings = await prisma.businessSettings.findUnique({ where: { id: "main" } });
 
   return (
-    <AdminShell adminName={session.user.name} logoUrl={settings?.logoUrl}>
+    <AdminShell
+      adminName={session.user.name}
+      logoUrl={settings?.logoUrl}
+      durableStorage={hasDurableDatabase()}
+    >
       {children}
     </AdminShell>
   );

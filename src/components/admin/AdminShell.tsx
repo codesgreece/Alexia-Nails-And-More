@@ -41,10 +41,12 @@ export function AdminShell({
   children,
   adminName,
   logoUrl,
+  durableStorage = true,
 }: {
   children: React.ReactNode;
   adminName?: string | null;
   logoUrl?: string;
+  durableStorage?: boolean;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -137,7 +139,18 @@ export function AdminShell({
           </button>
           <span className="font-display text-lg">Admin</span>
         </header>
-        <main className="flex-1 p-4 md:p-6 lg:p-8">{children}</main>
+        <main className="flex-1 p-4 md:p-6 lg:p-8">
+          {!durableStorage && (
+            <div className="mb-5 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+              Προσοχή: οι αλλαγές δεν αποθηκεύονται μόνιμα ακόμα. Στο Vercel δημιουργήστε
+              Storage → Blob (ή προσθέστε Turso{" "}
+              <code className="rounded bg-white px-1">TURSO_DATABASE_URL</code> /{" "}
+              <code className="rounded bg-white px-1">TURSO_AUTH_TOKEN</code>) και κάντε
+              Redeploy.
+            </div>
+          )}
+          {children}
+        </main>
       </div>
     </div>
   );

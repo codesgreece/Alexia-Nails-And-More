@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -60,6 +61,9 @@ export async function PATCH(request: Request) {
     create: { id: "main", ...parsed.data },
     update: parsed.data,
   });
+
+  revalidatePath("/", "layout");
+  revalidatePath("/");
 
   return NextResponse.json({ settings });
 }
