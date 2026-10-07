@@ -36,3 +36,15 @@ npm run dev
 - Lash extension packages are intentionally excluded.
 - Reviews are admin-managed only (no fake reviews seeded).
 - Email notifications are queued; delivery is skipped until SMTP is configured.
+
+## Vercel persistence (important)
+
+SQLite on the Vercel filesystem is ephemeral. Without durable storage, admin
+edits appear to save then disappear on the next cold start.
+
+Pick one:
+
+1. **Vercel Blob (easiest)** — Project → Storage → Blob → Create → Connect → Redeploy  
+   Uses `BLOB_READ_WRITE_TOKEN` automatically.
+2. **Turso** — set `TURSO_DATABASE_URL` + `TURSO_AUTH_TOKEN`, then Redeploy  
+   (`npm run db:seed-turso` copies local seed data).

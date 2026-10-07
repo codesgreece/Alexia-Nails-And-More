@@ -2,14 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function CookieConsent() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    if (pathname?.startsWith("/admin")) {
+      setOpen(false);
+      return;
+    }
     const saved = localStorage.getItem("alexia-cookie-consent");
     if (!saved) setOpen(true);
-  }, []);
+  }, [pathname]);
 
   function accept(value: "all" | "essential") {
     localStorage.setItem("alexia-cookie-consent", value);

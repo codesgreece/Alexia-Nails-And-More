@@ -1,7 +1,6 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function AdminLoginForm({
@@ -11,7 +10,6 @@ export function AdminLoginForm({
   callbackUrl: string;
   initialError: boolean;
 }) {
-  const router = useRouter();
   const [error, setError] = useState(initialError);
   const [pending, setPending] = useState(false);
   const dest = callbackUrl.startsWith("/admin") ? callbackUrl : "/admin";
@@ -22,21 +20,26 @@ export function AdminLoginForm({
     setError(false);
 
     const form = new FormData(event.currentTarget);
-    const result = await signIn("credentials", {
-      email: String(form.get("email") || ""),
-      password: String(form.get("password") || ""),
-      redirect: false,
-      callbackUrl: dest,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email: String(form.get("email") || ""),
+        password: String(form.get("password") || ""),
+        redirect: false,
+        callbackUrl: dest,
+      });
 
-    if (result?.ok) {
-      router.push(dest);
-      router.refresh();
-      return;
+      if (result?.ok) {
+        // Hard navigation so the session cookie is always picked up by proxy/auth.
+        window.location.assign(dest);
+        return;
+      }
+
+      setError(true);
+      setPending(false);
+    } catch {
+      setError(true);
+      setPending(false);
     }
-
-    setError(true);
-    setPending(false);
   }
 
   return (

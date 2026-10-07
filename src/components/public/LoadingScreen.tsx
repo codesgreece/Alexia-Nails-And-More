@@ -1,6 +1,7 @@
 "use client";
 
 import { BrandLogo } from "@/components/ui/BrandLogo";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function LoadingScreen({
@@ -10,10 +11,18 @@ export function LoadingScreen({
   logoUrl: string;
   businessName: string;
 }) {
-  const [visible, setVisible] = useState(true);
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
+  const [visible, setVisible] = useState(!isAdmin);
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
+    if (isAdmin) {
+      setVisible(false);
+      return;
+    }
+    setVisible(true);
+    setFade(false);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const t1 = setTimeout(() => setFade(true), reduce ? 200 : 900);
     const t2 = setTimeout(() => setVisible(false), reduce ? 350 : 1300);
@@ -21,9 +30,9 @@ export function LoadingScreen({
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, []);
+  }, [isAdmin]);
 
-  if (!visible) return null;
+  if (!visible || isAdmin) return null;
 
   return (
     <div

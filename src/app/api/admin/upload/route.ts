@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
+import { put } from "@vercel/blob";
 import { requireAdmin } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -28,6 +29,28 @@ export async function POST(request: Request) {
     ? ext.toLowerCase()
     : ".jpg";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${safeExt}`;
+
+  // Prefer Vercel Blob so uploads survive serverless deploys.
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const blob = await put(`uploads/${filename}`, bytes, {
+      access: "public",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+      contentType: file.type || "application/octet-stream",
+    });
+    return NextResponse.json({ url: blob.url, filename });
+  }
+
+  if (process.env.VERCEL) {
+    return NextResponse.json(
+      {
+        error:
+          "Τα uploads στο Vercel απαιτούν Vercel Blob. Δημιουργήστε Blob store στο Vercel Storage και ξανακάντε deploy.",
+      },
+      { status: 503 }
+    );
+  }
+
   const uploadsDir = path.join(process.cwd(), "public", "uploads");
   await mkdir(uploadsDir, { recursive: true });
   await writeFile(path.join(uploadsDir, filename), bytes);
