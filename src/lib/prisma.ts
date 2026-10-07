@@ -12,7 +12,7 @@ const globalForPrisma = globalThis as unknown as {
 
 const TMP_DB = "/tmp/alexia.db";
 const BLOB_PATHNAME = "alexia-runtime.db";
-const BLOB_REFRESH_MS = 2500;
+const BLOB_REFRESH_MS = 1000;
 const MUTATING = new Set([
   "create",
   "update",
@@ -43,7 +43,13 @@ async function downloadBlobDb(): Promise<boolean> {
     const result = await list({ prefix: BLOB_PATHNAME, limit: 20 });
     const blob = result.blobs.find((b) => b.pathname === BLOB_PATHNAME);
     if (!blob) return false;
-    const res = await fetch(blob.url, { cache: "no-store" });
+    // Bust CDN/edge cache so every instance sees the latest DB bytes.
+    const url = new URL(blob.downloadUrl || blob.url);
+    url.searchParams.set("t", String(Date.now()));
+    const res = await fetch(url, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+    });
     if (!res.ok) return false;
     writeFileSync(TMP_DB, Buffer.from(await res.arrayBuffer()));
     globalForPrisma.alexiaBlobCheckedAt = Date.now();
@@ -62,7 +68,7 @@ async function uploadBlobDb() {
       access: "public",
       addRandomSuffix: false,
       allowOverwrite: true,
-      cacheControlMaxAge: 60,
+      cacheControlMaxAge: 0,
       contentType: "application/x-sqlite3",
     });
     globalForPrisma.alexiaBlobCheckedAt = Date.now();
