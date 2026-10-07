@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { DAY_NAMES_GR } from "@/lib/utils";
 import { uploadFile } from "@/components/admin/StatusBadge";
 
@@ -178,6 +178,21 @@ export default function StaffPage() {
       return;
     }
     setEditing(false);
+    load();
+  }
+
+  async function removeStaff(id: string, name: string) {
+    if (!confirm(`Διαγραφή του μέλους «${name}»;`)) return;
+    const res = await fetch(`/api/admin/staff/${id}`, { method: "DELETE" });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      alert(data.error || "Σφάλμα διαγραφής");
+      return;
+    }
+    if (data.softDeleted && data.message) {
+      alert(data.message);
+    }
+    if (form.id === id) setEditing(false);
     load();
   }
 
@@ -560,7 +575,7 @@ export default function StaffPage() {
             </div>
           )}
 
-          <div className="flex gap-2 pt-2">
+          <div className="flex flex-wrap gap-2 pt-2">
             <button type="submit" className="btn-primary !py-2.5 text-sm">
               Αποθήκευση
             </button>
@@ -571,6 +586,16 @@ export default function StaffPage() {
             >
               Ακύρωση
             </button>
+            {form.id && (
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-pink/30 px-4 py-2.5 text-sm font-medium text-pink transition hover:bg-pink-soft"
+                onClick={() => removeStaff(form.id, form.name || "μέλος")}
+              >
+                <Trash2 size={15} />
+                Διαγραφή
+              </button>
+            )}
           </div>
         </form>
       )}
@@ -580,32 +605,47 @@ export default function StaffPage() {
           <p className="text-warm-gray">Φόρτωση…</p>
         ) : (
           staff.map((s) => (
-            <button
+            <div
               key={s.id}
-              type="button"
-              onClick={() => openEdit(s)}
               className="admin-card p-5 text-left transition hover:-translate-y-0.5"
             >
-              <div className="mb-3 flex items-center gap-3">
-                <div
-                  className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full text-white"
-                  style={{ background: s.color }}
+              <div className="mb-3 flex items-start gap-3">
+                <button
+                  type="button"
+                  onClick={() => openEdit(s)}
+                  className="flex min-w-0 flex-1 items-center gap-3 text-left"
                 >
-                  {s.photoUrl ? (
-                    <Image src={s.photoUrl} alt={s.name} width={48} height={48} className="object-cover" />
-                  ) : (
-                    s.name.slice(0, 1)
-                  )}
-                </div>
-                <div>
-                  <p className="font-display text-xl">{s.name}</p>
-                  <p className="text-xs text-warm-gray">
-                    {s.status === "ACTIVE" ? "Ενεργό" : "Ανενεργό"} · {s.services.length} υπηρεσίες
-                  </p>
-                </div>
+                  <div
+                    className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full text-white"
+                    style={{ background: s.color }}
+                  >
+                    {s.photoUrl ? (
+                      <Image src={s.photoUrl} alt={s.name} width={48} height={48} className="object-cover" />
+                    ) : (
+                      s.name.slice(0, 1)
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-display text-xl">{s.name}</p>
+                    <p className="text-xs text-warm-gray">
+                      {s.status === "ACTIVE" ? "Ενεργό" : "Ανενεργό"} · {s.services.length} υπηρεσίες
+                    </p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  aria-label={`Διαγραφή ${s.name}`}
+                  title="Διαγραφή"
+                  className="rounded-lg border border-[var(--border)] p-2 text-warm-gray transition hover:border-pink hover:text-pink"
+                  onClick={() => removeStaff(s.id, s.name)}
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-              <p className="line-clamp-2 text-sm text-warm-gray">{s.bio || s.specialties || "—"}</p>
-            </button>
+              <button type="button" onClick={() => openEdit(s)} className="w-full text-left">
+                <p className="line-clamp-2 text-sm text-warm-gray">{s.bio || s.specialties || "—"}</p>
+              </button>
+            </div>
           ))
         )}
       </div>
